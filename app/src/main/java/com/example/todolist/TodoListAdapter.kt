@@ -6,10 +6,15 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.todolist.databinding.TodoItemBinding
 
-class TodoListAdapter(private val tasks: List<Task>) : RecyclerView.Adapter<TodoListAdapter.TaskViewHolder>() {
+class TodoListAdapter(private val tasks: MutableList<Task> = mutableListOf<Task>()) : RecyclerView.Adapter<TodoListAdapter.TaskViewHolder>() {
     inner class TaskViewHolder(binding: TodoItemBinding) : ViewHolder(binding.root) {
         val taskName = binding.tvTodoTitle
         val checkbox = binding.cbDone
+    }
+
+    fun addTask(name: String) {
+        val newTask = Task(name)
+        tasks.add(newTask)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
