@@ -12,13 +12,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Initialize RecycleView adapter
         val adapter = TodoListAdapter()
-
         binding.rvTodoList.layoutManager = LinearLayoutManager(applicationContext)
         binding.rvTodoList.adapter = adapter
 
         binding.btAddTask.setOnClickListener {
             adapter.addTask(binding.etTodoInput.text.toString())
         }
+
+        binding.btFinishTask.setOnClickListener { adapter.finishTasks() }
     }
 }
