@@ -23,22 +23,27 @@ class TodoListAdapter : RecyclerView.Adapter<TodoListAdapter.TaskViewHolder>() {
 
     fun finishTasks() {
         for (i in tasks.size - 1 downTo 0) {
-            if (tasks[i].checkbox.isChecked) {
+            if (tasks[i].isDone) {
                 tasks.removeAt(i)
-                notifyItemRemoved(i)
             }
         }
+        // notifying at each task removal caused out-of-range errors when you finished some tasks and check any later one
+        // that was probably because it wasn't updated properly and the position in onBindViewHolder() stayed the same
+        // using this method instead fixed these errors
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = TodoItemBinding.inflate(inflater, parent, false)
+
         return TaskViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         holder.taskName.text = tasks[position].name
-        tasks[position].checkbox = holder.checkbox
+        holder.checkbox.isChecked = tasks[position].isDone
+        holder.checkbox.setOnClickListener { tasks[position].isDone = holder.checkbox.isChecked }
     }
 
     override fun getItemCount(): Int {
