@@ -18,12 +18,15 @@ class TodoListAdapter : RecyclerView.Adapter<TodoListAdapter.TaskViewHolder>() {
     fun addTask(name: String) {
         val newTask = Task(name)
         tasks.add(newTask)
+        notifyItemInserted(tasks.size - 1)
     }
 
     fun finishTasks() {
         for (i in tasks.size - 1 downTo 0) {
-            if (tasks[i].isDone)
+            if (tasks[i].checkbox.isChecked) {
                 tasks.removeAt(i)
+                notifyItemRemoved(i)
+            }
         }
     }
 
@@ -35,7 +38,7 @@ class TodoListAdapter : RecyclerView.Adapter<TodoListAdapter.TaskViewHolder>() {
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         holder.taskName.text = tasks[position].name
-        holder.checkbox.setOnClickListener { tasks[position].isDone = holder.checkbox.isChecked }
+        tasks[position].checkbox = holder.checkbox
     }
 
     override fun getItemCount(): Int {

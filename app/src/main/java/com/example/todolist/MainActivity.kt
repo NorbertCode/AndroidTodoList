@@ -19,8 +19,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.btAddTask.setOnClickListener {
             adapter.addTask(binding.etTodoInput.text.toString())
+            binding.etTodoInput.text.clear()
         }
 
-        binding.btFinishTask.setOnClickListener { adapter.finishTasks() }
+        binding.btFinishTask.setOnClickListener {
+            adapter.finishTasks()
+        }
     }
 }
