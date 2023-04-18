@@ -13,7 +13,11 @@ class TodoListAdapter : RecyclerView.Adapter<TodoListAdapter.TaskViewHolder>() {
         val checkbox = binding.cbDone
     }
 
-    private val tasks: MutableList<Task> = mutableListOf()
+    private var tasks: MutableList<Task> = mutableListOf()
+
+    fun loadTasks(savedTasks: MutableList<Task>) {
+        tasks = savedTasks
+    }
 
     fun addTask(name: String) {
         val newTask = Task(name)
