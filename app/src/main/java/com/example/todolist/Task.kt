@@ -1,12 +1,14 @@
 package com.example.todolist
 
 import androidx.lifecycle.ViewModel
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity(tableName = "tasks")
 data class Task(
     val name: String,
     var isDone: Boolean = false
-)
-
-data class SavedTasks(
-    val tasks: MutableList<Task> = mutableListOf()
-) : ViewModel()
+) {
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
+}

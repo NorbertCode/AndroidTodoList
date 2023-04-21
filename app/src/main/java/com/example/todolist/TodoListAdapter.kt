@@ -1,5 +1,7 @@
 package com.example.todolist
 
+import android.app.Application
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.todolist.databinding.TodoItemBinding
 
-class TodoListAdapter : RecyclerView.Adapter<TodoListAdapter.TaskViewHolder>() {
+class TodoListAdapter(val applicationContext: Context) : RecyclerView.Adapter<TodoListAdapter.TaskViewHolder>() {
     inner class TaskViewHolder(binding: TodoItemBinding) : ViewHolder(binding.root) {
         val taskName = binding.tvTodoTitle
         val checkbox = binding.cbDone
@@ -22,12 +24,14 @@ class TodoListAdapter : RecyclerView.Adapter<TodoListAdapter.TaskViewHolder>() {
     fun addTask(name: String) {
         val newTask = Task(name)
         tasks.add(newTask)
+        TasksDatabase.getInstance(applicationContext)!!.TasksDao().insert(newTask)
         notifyItemInserted(tasks.size - 1)
     }
 
     fun finishTasks() {
         for (i in tasks.size - 1 downTo 0) {
             if (tasks[i].isDone) {
+                TasksDatabase.getInstance(applicationContext)!!.TasksDao().delete(tasks[i])
                 tasks.removeAt(i)
             }
         }

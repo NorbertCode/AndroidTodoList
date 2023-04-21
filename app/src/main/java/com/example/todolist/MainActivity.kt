@@ -8,20 +8,18 @@ import com.example.todolist.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val tasksViewModel by viewModels<SavedTasks>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Initialize RecycleView adapter
-        val adapter = TodoListAdapter()
+        val adapter = TodoListAdapter(applicationContext)
         binding.rvTodoList.layoutManager = LinearLayoutManager(applicationContext)
         binding.rvTodoList.adapter = adapter
 
-        // Makes sure tasks don't get reset when rotating the phone
-        // Doesn't save the data to the drive
-        adapter.loadTasks(tasksViewModel.tasks)
+        val tasksToLoad = TasksDatabase.getInstance(applicationContext)!!.TasksDao().getAllTasks()
+        adapter.loadTasks(tasksToLoad)
 
         binding.btAddTask.setOnClickListener {
             adapter.addTask(binding.etTodoInput.text.toString())
