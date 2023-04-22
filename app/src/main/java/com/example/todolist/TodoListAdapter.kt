@@ -35,10 +35,13 @@ class TodoListAdapter(private val applicationContext: Context) : RecyclerView.Ad
     fun finishTasks() {
         for (i in tasks.size - 1 downTo 0) {
             if (tasks[i].isDone) {
+                // copy this a variable first, so when you try to remove it from the database on another thread, it doesn't turn out it's already removed
+                val toRemove = tasks[i]
+
                 GlobalScope.launch {
-                    TasksDatabase.getInstance(applicationContext)!!.TasksDao().delete(tasks[i])
+                    TasksDatabase.getInstance(applicationContext)!!.TasksDao().delete(toRemove)
                 }
-                tasks.removeAt(i)
+                tasks.remove(toRemove)
             }
         }
         // notifying at each task removal caused out-of-range errors when you finished some tasks and check any later one
