@@ -14,7 +14,7 @@ abstract class TasksDatabase: RoomDatabase() {
 
         fun getInstance(context: Context): TasksDatabase? {
             if (instance == null) {
-                instance = Room.databaseBuilder(context, TasksDatabase::class.java, "tasks").allowMainThreadQueries().build()
+                instance = Room.databaseBuilder(context, TasksDatabase::class.java, "tasks").build()
             }
             return instance
         }
