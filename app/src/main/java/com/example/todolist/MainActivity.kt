@@ -7,8 +7,10 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolist.databinding.ActivityMainBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -25,6 +27,9 @@ class MainActivity : AppCompatActivity() {
         GlobalScope.launch {
             val tasksToLoad = TasksDatabase.getInstance(applicationContext)!!.TasksDao().getAllTasks()
             adapter.loadTasks(tasksToLoad)
+            withContext(Dispatchers.Main) {
+                adapter.notifyDataSetChanged()
+            }
         }
 
         binding.btAddTask.setOnClickListener {
