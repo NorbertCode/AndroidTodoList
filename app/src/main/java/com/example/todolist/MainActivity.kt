@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
 
     fun goToTaskOptions(task: Task) {
         val intent = Intent(applicationContext, TaskOptions::class.java)
+        intent.putExtra("TASK_ID", task.id)
         intent.putExtra("TASK_NAME", task.name)
         startActivity(intent)
     }
