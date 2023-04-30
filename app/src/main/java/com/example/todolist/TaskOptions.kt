@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.todolist.databinding.ActivityTaskOptionsBinding
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class TaskOptions : AppCompatActivity() {
     private lateinit var binding: ActivityTaskOptionsBinding
@@ -26,7 +28,12 @@ class TaskOptions : AppCompatActivity() {
     }
 
     private fun save() {
-        // todo: save
+        if (intent.hasExtra("TASK_ID")) {
+            val updatedTask = Task(binding.etName.text.toString(), false, intent.getIntExtra("TASK_ID", -1))
+            GlobalScope.launch {
+                TasksDatabase.getInstance(applicationContext)!!.TasksDao().update(updatedTask)
+            }
+        }
         exit()
     }
 }
