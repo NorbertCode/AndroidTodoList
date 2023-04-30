@@ -14,7 +14,7 @@ import com.example.todolist.databinding.TodoItemBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class TodoListAdapter(private val activity: Activity) : RecyclerView.Adapter<TodoListAdapter.TaskViewHolder>() {
+class TodoListAdapter(private val activity: MainActivity) : RecyclerView.Adapter<TodoListAdapter.TaskViewHolder>() {
     inner class TaskViewHolder(binding: TodoItemBinding) : ViewHolder(binding.root) {
         val taskName = binding.tvTodoTitle
         val checkbox = binding.cbDone
@@ -53,11 +53,6 @@ class TodoListAdapter(private val activity: Activity) : RecyclerView.Adapter<Tod
         notifyDataSetChanged()
     }
 
-    private fun goToTaskOptions() {
-        val intent = Intent(activity.applicationContext, TaskOptions::class.java)
-        activity.startActivity(intent)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = TodoItemBinding.inflate(inflater, parent, false)
@@ -68,7 +63,7 @@ class TodoListAdapter(private val activity: Activity) : RecyclerView.Adapter<Tod
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         holder.taskName.text = tasks[position].name
         holder.checkbox.isChecked = tasks[position].isDone
-        holder.taskName.setOnClickListener { goToTaskOptions() }
+        holder.taskName.setOnClickListener { activity.goToTaskOptions(tasks[position]) }
         holder.checkbox.setOnClickListener { tasks[position].isDone = holder.checkbox.isChecked }
     }
 
