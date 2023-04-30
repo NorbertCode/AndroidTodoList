@@ -1,17 +1,20 @@
 package com.example.todolist
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.example.todolist.databinding.ActivityMainBinding
 import com.example.todolist.databinding.TodoItemBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class TodoListAdapter(private val applicationContext: Context) : RecyclerView.Adapter<TodoListAdapter.TaskViewHolder>() {
+class TodoListAdapter(private val activity: Activity) : RecyclerView.Adapter<TodoListAdapter.TaskViewHolder>() {
     inner class TaskViewHolder(binding: TodoItemBinding) : ViewHolder(binding.root) {
         val taskName = binding.tvTodoTitle
         val checkbox = binding.cbDone
@@ -26,7 +29,7 @@ class TodoListAdapter(private val applicationContext: Context) : RecyclerView.Ad
     fun addTask(name: String) {
         val newTask = Task(name)
         GlobalScope.launch {
-            TasksDatabase.getInstance(applicationContext)!!.TasksDao().insert(newTask)
+            TasksDatabase.getInstance(activity.applicationContext)!!.TasksDao().insert(newTask)
         }
         tasks.add(newTask)
         notifyItemInserted(tasks.size - 1)
@@ -39,7 +42,7 @@ class TodoListAdapter(private val applicationContext: Context) : RecyclerView.Ad
                 val toRemove = tasks[i]
 
                 GlobalScope.launch {
-                    TasksDatabase.getInstance(applicationContext)!!.TasksDao().delete(toRemove)
+                    TasksDatabase.getInstance(activity.applicationContext)!!.TasksDao().delete(toRemove)
                 }
                 tasks.remove(toRemove)
             }
@@ -48,6 +51,11 @@ class TodoListAdapter(private val applicationContext: Context) : RecyclerView.Ad
         // that was probably because it wasn't updated properly and the position in onBindViewHolder() stayed the same
         // using this method instead fixed these errors
         notifyDataSetChanged()
+    }
+
+    private fun goToTaskOptions() {
+        val intent = Intent(activity.applicationContext, TaskOptions::class.java)
+        activity.startActivity(intent)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -60,6 +68,7 @@ class TodoListAdapter(private val applicationContext: Context) : RecyclerView.Ad
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         holder.taskName.text = tasks[position].name
         holder.checkbox.isChecked = tasks[position].isDone
+        holder.taskName.setOnClickListener { goToTaskOptions() }
         holder.checkbox.setOnClickListener { tasks[position].isDone = holder.checkbox.isChecked }
     }
 

@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Initialize RecycleView adapter
-        val adapter = TodoListAdapter(applicationContext)
+        val adapter = TodoListAdapter(this)
         binding.rvTodoList.layoutManager = LinearLayoutManager(applicationContext)
         binding.rvTodoList.adapter = adapter
 
